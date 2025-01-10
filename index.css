@@ -3,3 +3,23 @@
     display: flex;
     justify-content: center;
 }
+
+#introScreen {
+    height: 100vh;
+    z-index: 1;
+}
+
+@keyframes start {
+    0% {
+        opacity: 100%;
+    }
+
+    99% {
+        display: initial;
+    }
+
+    100% {
+        opacity: 0%;
+        display: none;
+    }
+}

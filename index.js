@@ -10,6 +10,7 @@ const ballCount = 10;
 const friction = 0.1;
 
 const ballRadiussq = (2*ballRadius) ** 2
+const ballHitSound = new Audio('ball-hit.mp3');
 
 let balls = [{
     "x": cwidth/2,
@@ -90,6 +91,8 @@ function draw() {
                     
                     // Bare fortsett hvis ballene beveger seg mot hverandre
                     if (dotProduct > 0) continue;
+
+                    ballHitSound.play();
             
                     // Bevaring av bevegelsesmengde (antar samme masse for begge baller)
                     const impulseX = 1 * dotProduct * nx;
@@ -178,29 +181,35 @@ function randInt(a, b) {
     return Math.floor(Math.random() * (b - a) + a);
 }
 
-if (gc.getContext) {
-    var ctx = gc.getContext("2d");
+function startGame() {
 
-    var tableImg = new Image();
-    tableImg.src = "table.jpg";
+    isEl = document.getElementById("introScreen");
+    isEl.style.
 
-    var cueImg = new Image();
-    cueImg.src = "cue.png";
-
-    for (var i = 0; i < ballCount; i++) {
-        let c = "red";
-        if (i >= ballCount/2) { c = "blue"; }
-        
-        balls.push({
-            "x": randInt(10, cwidth-10),
-            "y": randInt(10, cwidth-10),
-            "vx": randInt(2, 10),
-            "vy": randInt(2, 10),
-            "c": c,
-            });
+    if (gc.getContext) {
+        var ctx = gc.getContext("2d");
+    
+        var tableImg = new Image();
+        tableImg.src = "table.jpg";
+    
+        var cueImg = new Image();
+        cueImg.src = "cue.png";
+    
+        for (var i = 0; i < ballCount; i++) {
+            let c = "red";
+            if (i >= ballCount/2) { c = "blue"; }
+            
+            balls.push({
+                "x": randInt(10, cwidth-10),
+                "y": randInt(10, cwidth-10),
+                "vx": randInt(4, 14),
+                "vy": randInt(4, 14),
+                "c": c,
+                });
+        }
+    
+        tableImg.addEventListener("load", () => {
+            draw();
+        });
     }
-
-    tableImg.addEventListener("load", () => {
-        draw();
-    });
 }
