@@ -3,6 +3,7 @@ const gc = document.querySelector("#gameCanvas");
 const gcRect = gc.getBoundingClientRect();
 const cwidth = gc.width;
 const cheight = gc.height;
+const maxPixDist = Math.sqrt(cwidth*cwidth + cheight*cheight);
 
 const ballRadius = 20;
 const ballCount = 10;
@@ -28,7 +29,7 @@ function onMouse(evt) {
 
 function draw() {
 
-    ctx.drawImage(tableImg, 0, 0, cwidth, cheight);
+    ctx.drawImage(tableImg, 0, 0, gc.width, gc.height);
 
     let vSum = 0;
 
@@ -136,14 +137,31 @@ function draw() {
 
         var width = cueImg.width/2;
         var height = cueImg.height/2;
-        var angle = Math.atan((mouseY - balls[0]['y']) / (mouseX - balls[0]['x']));
+        var angle = Math.atan((mouseY - balls[0]['y'] - ballRadius/2) / (mouseX - balls[0]['x'] - ballRadius/2));
         angle += Math.PI/2;
 
-        ctx.translate(mouseX, mouseY);
+        if (mouseX >= balls[0]['x']) {
+            angle += Math.PI;
+        }
+
+        var cueX = mouseX - balls[0]['x'] - ballRadius/2;
+        var cueY = mouseY - balls[0]['y'] - ballRadius/2;
+        var distSq = cueX*cueX + cueY*cueY;
+        var dist = Math.sqrt(distSq);
+        var sigmoid = (1 / (1 + Math.exp(-dist/maxPixDist)));
+        console.log(sigmoid);
+
+        cueX *= 0.1 + 0.9*sigmoid;
+        cueY *= 0.1 + 0.9*sigmoid;
+
+        cueX += balls[0]['x'] + ballRadius/2;
+        cueY += balls[0]['y'] + ballRadius/2;
+
+        ctx.translate(cueX, cueY);
         ctx.rotate(angle);
         ctx.drawImage(cueImg, -width / 2, -height / 2, width, height);
         ctx.rotate(-angle);
-        ctx.translate(-mouseX, -mouseY);
+        ctx.translate(-cueX, -cueY);
         
         // ctx.drawImage(cueImg, mouseX, mouseY, 50/2, 520/2);
         // ctx.beginPath();
