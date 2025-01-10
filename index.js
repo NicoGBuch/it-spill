@@ -3,15 +3,19 @@ const gc = document.querySelector("#gameCanvas");
 const gcRect = gc.getBoundingClientRect();
 const cwidth = gc.width;
 const cheight = gc.height;
-const ballRadius = 30;
-const ballRadiussq = (2*ballRadius) ** 2
+
+const ballRadius = 20;
+const ballCount = 10;
 const friction = 0.1;
+
+const ballRadiussq = (2*ballRadius) ** 2
 
 let balls = [{
     "x": cwidth/2,
     "y": cheight/2,
     "vx": 2,
     "vy": 2,
+    "c": "white"
     }];
 
 let mouseX = 0;
@@ -112,10 +116,8 @@ function draw() {
 
     for (var i = 0; i < balls.length; i++) {
         ctx.beginPath();
-        ctx.arc(balls[i]["x"], balls[i]["y"], ballRadius, 0, 2 * Math.PI, false);
-
-        if (i == 0) { ctx.fillStyle = 'white'; }
-        else        { ctx.fillStyle = 'green'; }
+        ctx.arc(balls[i]['x'], balls[i]['y'], ballRadius, 0, 2 * Math.PI, false);
+        ctx.fillStyle = balls[i]['c'];
 
         ctx.fill();
         ctx.lineWidth = 5;
@@ -132,7 +134,18 @@ function draw() {
         ctx.strokeStyle = '#003300';
         ctx.stroke();
 
-        ctx.drawImage(cueImg, mouseX, mouseY, 50/2, 520/2);
+        var width = cueImg.width/2;
+        var height = cueImg.height/2;
+        var angle = Math.atan((mouseY - balls[0]['y']) / (mouseX - balls[0]['x']));
+        angle += Math.PI/2;
+
+        ctx.translate(mouseX, mouseY);
+        ctx.rotate(angle);
+        ctx.drawImage(cueImg, -width / 2, -height / 2, width, height);
+        ctx.rotate(-angle);
+        ctx.translate(-mouseX, -mouseY);
+        
+        // ctx.drawImage(cueImg, mouseX, mouseY, 50/2, 520/2);
         // ctx.beginPath();
         // ctx.strokeStyle = "green";
         // ctx.moveTo(mouseX, mouseY);
@@ -156,12 +169,16 @@ if (gc.getContext) {
     var cueImg = new Image();
     cueImg.src = "cue.png";
 
-    for (var i = 0; i < 8; i++) {
+    for (var i = 0; i < ballCount; i++) {
+        let c = "red";
+        if (i >= ballCount/2) { c = "blue"; }
+        
         balls.push({
             "x": randInt(10, cwidth-10),
             "y": randInt(10, cwidth-10),
             "vx": randInt(2, 10),
             "vy": randInt(2, 10),
+            "c": c,
             });
     }
 
