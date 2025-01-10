@@ -1,4 +1,21 @@
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", serif;
+}
+
+:root {
+    --background-color: #f3f3e7;
+    --font-color: #141413;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--font-color);
+}
+
 #canvasContainer {
     display: flex;
     justify-content: center;
@@ -9,17 +26,26 @@
     z-index: 1;
 }
 
+.invisible {
+    display: none;
+    height: 0;
+}
+
+.startAnimation {
+    animation: start 1.0s;
+    display: none;
+}
+
 @keyframes start {
     0% {
         opacity: 100%;
     }
 
-    99% {
+    /* 99% {
         display: initial;
-    }
+    } */
 
     100% {
         opacity: 0%;
-        display: none;
     }
 }

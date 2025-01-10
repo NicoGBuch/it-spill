@@ -8,6 +8,7 @@ const maxPixDist = Math.sqrt(cwidth*cwidth + cheight*cheight);
 const ballRadius = 20;
 const ballCount = 10;
 const friction = 0.1;
+const timestep = 2;
 
 const ballRadiussq = (2*ballRadius) ** 2
 const ballHitSound = new Audio('ball-hit.mp3');
@@ -22,31 +23,29 @@ let balls = [{
 
 let mouseX = 0;
 let mouseY = 0;
+let ctx = undefined;
 
 function onMouse(evt) {
     mouseX = evt.clientX - gcRect.left;
     mouseY = evt.clientY - gcRect.top;
 }
 
-function draw() {
-
-    ctx.drawImage(tableImg, 0, 0, gc.width, gc.height);
-
+function updateGame() {
     let vSum = 0;
 
     for (var i = 0; i < balls.length; i++) {
-        const speed = Math.sqrt(balls[i]["vx"] ** 2 + balls[i]["vy"] ** 2);
+        const speed = Math.sqrt((balls[i]["vx"]/timestep) ** 2 + (balls[i]["vy"]/timestep) ** 2);
         if (speed == 0) { continue; }
 
-        balls[i]["vx"] -= friction * balls[i]["vx"] / speed;
-        balls[i]["vy"] -= friction * balls[i]["vy"] / speed;
+        balls[i]["vx"] -= (friction/timestep) * (balls[i]["vx"]/timestep) / speed;
+        balls[i]["vy"] -= (friction/timestep) * (balls[i]["vy"]/timestep) / speed;
 
-        if (Math.abs(balls[i]["vx"]) < 0.1) { balls[i]["vx"] = 0; }
-        if (Math.abs(balls[i]["vy"]) < 0.1) { balls[i]["vy"] = 0; }
+        if (Math.abs(balls[i]["vx"]/timestep) < 0.1) { balls[i]["vx"] = 0; }
+        if (Math.abs(balls[i]["vy"]/timestep) < 0.1) { balls[i]["vy"] = 0; }
         vSum += balls[i]["vx"] + balls[i]["vy"];
 
-        balls[i]["x"] += balls[i]["vx"];
-        balls[i]["y"] += balls[i]["vy"];
+        balls[i]["x"] += balls[i]["vx"] / timestep;
+        balls[i]["y"] += balls[i]["vy"] / timestep;
 
         if (balls[i]["x"]+ballRadius > cwidth) {
             balls[i]["x"] = 2*cwidth - balls[i]["x"] - 2*ballRadius;
@@ -92,7 +91,7 @@ function draw() {
                     // Bare fortsett hvis ballene beveger seg mot hverandre
                     if (dotProduct > 0) continue;
 
-                    ballHitSound.play();
+                    ballHitSound.cloneNode(true).play();
             
                     // Bevaring av bevegelsesmengde (antar samme masse for begge baller)
                     const impulseX = 1 * dotProduct * nx;
@@ -116,6 +115,18 @@ function draw() {
                 }
             }
         }
+    }
+
+    return vSum;
+}
+
+function draw() {
+
+    ctx.drawImage(tableImg, 0, 0, gc.width, gc.height);
+
+    let vSum = 0;
+    for (var i = 0; i < timestep; i++) {
+        vSum = updateGame();
     }
 
     for (var i = 0; i < balls.length; i++) {
@@ -152,13 +163,15 @@ function draw() {
         var distSq = cueX*cueX + cueY*cueY;
         var dist = Math.sqrt(distSq);
         var sigmoid = (1 / (1 + Math.exp(-dist/maxPixDist)));
-        console.log(sigmoid);
+        // console.log(sigmoid);
 
-        cueX *= 0.1 + 0.9*sigmoid;
-        cueY *= 0.1 + 0.9*sigmoid;
+        // cueX *= 0.1 + 0.9*sigmoid;
+        // cueY *= 0.1 + 0.9*sigmoid;
 
         cueX += balls[0]['x'] + ballRadius/2;
         cueY += balls[0]['y'] + ballRadius/2;
+
+        console.log(width);
 
         ctx.translate(cueX, cueY);
         ctx.rotate(angle);
@@ -183,16 +196,16 @@ function randInt(a, b) {
 
 function startGame() {
 
-    isEl = document.getElementById("introScreen");
-    isEl.style.
+    document.querySelector("#canvasContainer").classList.remove("invisible");
+    document.querySelector("#introScreen").classList.add("startAnimation");
 
     if (gc.getContext) {
-        var ctx = gc.getContext("2d");
+        ctx = gc.getContext("2d");
     
-        var tableImg = new Image();
+        tableImg = new Image();
         tableImg.src = "table.jpg";
     
-        var cueImg = new Image();
+        cueImg = new Image();
         cueImg.src = "cue.png";
     
         for (var i = 0; i < ballCount; i++) {
