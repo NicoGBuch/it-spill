@@ -11,14 +11,15 @@
     --font-color: #141413;
 }
 
+html, body {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
 body {
     background-color: var(--background-color);
     color: var(--font-color);
-}
-
-#canvasContainer {
-    display: flex;
-    justify-content: center;
 }
 
 #introScreen {

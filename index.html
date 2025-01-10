@@ -10,7 +10,6 @@
 </head>
 <body>
 
-
     <div id="introScreen">
         <h1>Biljard</h1>
 
@@ -19,11 +18,12 @@
         </button>
     </div>
 
-    <div id="canvasContainer" class="invisible">
-        <canvas id="gameCanvas" onmousemove="onMouse(event)" width="1000" height="700">
-            This browser doesnt support canvas technology, try another or update
-        </canvas>
-    </div>
+    <canvas id="gameCanvas"
+            class="invisible"
+            onmousemove="onMouse(event)"
+            onmousedown="onMouseDown(event)">
+        This browser doesnt support canvas technology, try another or update
+    </canvas>
 
     <script src="index.js"></script>
 </body>
