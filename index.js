@@ -14,6 +14,7 @@ const ballRadius = 20;
 const ballCount = 10;
 const friction = 0.1;
 const timestep = 2;
+const cueStrength = 0.1;
 
 const ballRadiussq = (2*ballRadius) ** 2
 const ballHitSound = new Audio('ball-hit.mp3');
@@ -38,6 +39,20 @@ function onMouse(evt) {
 
 function onMouseDown(evt) {
     if (gameState != 'cue') { return; }
+
+    var cueX = mouseX - balls[0]['x'] - ballRadius/2;
+    var cueY = mouseY - balls[0]['y'] - ballRadius/2;
+
+    var distSq = cueX*cueX + cueY*cueY;
+    var dist = Math.sqrt(distSq);
+    var sigmoid = (1 / (1 + Math.exp(-dist/maxPixDist)));
+    cueX *= 1 - (0.05 + 0.95*sigmoid);
+    cueY *= 1 - (0.05 + 0.95*sigmoid);
+
+    balls[0]['vx'] -= cueStrength * cueX;
+    balls[0]['vy'] -= cueStrength * cueY;
+
+    gameState = 'balls';
 }
 
 function updateGame() {
