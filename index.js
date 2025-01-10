@@ -24,7 +24,7 @@ function onMouse(evt) {
 
 function draw() {
 
-    ctx.drawImage(table, 0, 0, cwidth, cheight);
+    ctx.drawImage(tableImg, 0, 0, cwidth, cheight);
 
     let vSum = 0;
 
@@ -124,8 +124,6 @@ function draw() {
     }
 
     if (vSum == 0) {
-        ctx.rect(mouseX, mouseY, balls[0]['x'] - mouseX, balls[0]['y'] - mouseY);
-
         ctx.beginPath();
         ctx.arc(mouseX, mouseY, 10, 0, 2 * Math.PI, false);
         ctx.fillStyle = 'white';
@@ -133,6 +131,13 @@ function draw() {
         ctx.lineWidth = 2;
         ctx.strokeStyle = '#003300';
         ctx.stroke();
+
+        ctx.drawImage(cueImg, mouseX, mouseY, 50/2, 520/2);
+        // ctx.beginPath();
+        // ctx.strokeStyle = "green";
+        // ctx.moveTo(mouseX, mouseY);
+        // ctx.lineTo(balls[0]['x'], balls[0]['y']);
+        // ctx.stroke();
     }
 
     window.requestAnimationFrame(draw);
@@ -144,8 +149,12 @@ function randInt(a, b) {
 
 if (gc.getContext) {
     var ctx = gc.getContext("2d");
-    var table = new Image();
-    table.src = "table.jpg";
+
+    var tableImg = new Image();
+    tableImg.src = "table.jpg";
+
+    var cueImg = new Image();
+    cueImg.src = "cue.png";
 
     for (var i = 0; i < 8; i++) {
         balls.push({
@@ -156,7 +165,7 @@ if (gc.getContext) {
             });
     }
 
-    table.addEventListener("load", () => {
+    tableImg.addEventListener("load", () => {
         draw();
     });
 }

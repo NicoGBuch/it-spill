@@ -3,15 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/index.css">
+
     <title>Biljard</title>
 </head>
 <body>
 
     <h1>Biljard</h1>
 
-    <canvas id="gameCanvas" onmousemove="onMouse(event)" width="900" height="600">
-        This browser doesnt support canvas technology, try another or update
-    </canvas>
+    <div id="canvasContainer">
+        <canvas id="gameCanvas" onmousemove="onMouse(event)" width="1000" height="800">
+            This browser doesnt support canvas technology, try another or update
+        </canvas>
+    </div>
 
     <script src="index.js"></script>
 </body>
