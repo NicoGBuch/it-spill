@@ -11,7 +11,7 @@ const cpadding = 100;
 const maxPixDist = Math.sqrt(cwidth*cwidth + cheight*cheight);
 
 const ballRadius = 20;
-const ballCount = 10;
+const ballCount = 14;
 const friction = 0.1;
 const timestep = 2;
 const cueStrength = 0.1;
@@ -175,7 +175,7 @@ function draw() {
 
     if (gameState == 'cue') {
         ctx.beginPath();
-        ctx.arc(mouseX, mouseY, 10, 0, 2 * Math.PI, false);
+        ctx.arc(mouseX, mouseY, 5, 0, 2 * Math.PI, false);
         ctx.fillStyle = 'white';
         ctx.fill();
         ctx.lineWidth = 2;
@@ -191,8 +191,8 @@ function draw() {
             angle += Math.PI;
         }
 
-        var cueX = mouseX - balls[0]['x'] - ballRadius/2;
-        var cueY = mouseY - balls[0]['y'] - ballRadius/2;
+        var cueX = mouseX - balls[0]['x'];
+        var cueY = mouseY - balls[0]['y'];
 
         var distSq = cueX*cueX + cueY*cueY;
         var dist = Math.sqrt(distSq);
@@ -200,12 +200,12 @@ function draw() {
         cueX *= 1 - (0.05 + 0.95*sigmoid);
         cueY *= 1 - (0.05 + 0.95*sigmoid);
 
-        cueX += balls[0]['x'] + ballRadius/2;
-        cueY += balls[0]['y'] + ballRadius/2;
+        cueX += balls[0]['x'];
+        cueY += balls[0]['y'];
 
         ctx.translate(cueX, cueY);
         ctx.rotate(angle);
-        ctx.drawImage(cueImg, -width / 2, -height / 2, width, height);
+        ctx.drawImage(cueImg, -width/2, ballRadius, width, height);
         ctx.rotate(-angle);
         ctx.translate(-cueX, -cueY);
         
